@@ -10,6 +10,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import net.lukegjpotter.java.reviews.model.Review;
+import net.lukegjpotter.java.reviews.model.ReviewUser;
 
 /**
  * Session Bean implementation class ReviewEjb
@@ -25,6 +26,9 @@ public class ReviewEjb implements ReviewEjbLocal {
     
     @PostConstruct
     public void onPostConstruct() {
+    	if(entityManager == null) {
+			System.out.println("    [ReviewEJB]    Entity Manager is null.");
+		}
     }
 
     @PreDestroy
@@ -36,10 +40,14 @@ public class ReviewEjb implements ReviewEjbLocal {
 	@Override
 	public void addReview(Review review) {
 		
+		if(entityManager == null) {
+			System.out.println("    [ReviewEJB]    Entity Manager is null.");
+		}
+		
 		System.out.println("    [ReviewEJB]    Inside AddReview.");
 		
 		if(review == null) {
-			review = new Review("Luke", "This was decent", 50);
+			review = new Review(new ReviewUser("lukegjpotter", ""), "This was decent", 50);
 		}
 		
 		System.out.println("    [ReviewEJB]    Trying to persist: " + review.toString());

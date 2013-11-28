@@ -9,7 +9,7 @@ import javax.persistence.*;
  */
 @NamedQueries({
 	@NamedQuery(name = "getAllReviewsInDatabase", query = "SELECT r FROM Review r"),
-	@NamedQuery(name = "getAllReviewsFromReviewer", query = "SELECT r FROM Review r WHERE r.reviewerName = :name")
+	@NamedQuery(name = "getAllReviewsFromReviewer", query = "SELECT r FROM Review r, ReviewUser ru WHERE ru.userName = :name")
 })
 @Entity
 @Table(name = "REVIEW", schema = "REVIEWS")
@@ -19,21 +19,22 @@ public class Review implements Serializable {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long reviewId;
-	private String reviewerName, reviewText;
+	private ReviewUser reviewUser;
+	private String reviewText;
 	private int rating; // Out of 100.
 	
 	// ---------- Constructors --------- //
 	public Review() {}
 	
-	public Review(String name, String text, int rating) {
-		setReviewerName(name); 
+	public Review(ReviewUser ru, String text, int rating) {
+		setReviewUser(ru);
 		setReviewText(text);
 		setRating(rating);
 	}
 	
-	public Review(long id, String name, String text, int rating) {
-		setReviewId(id);
-		setReviewerName(name); 
+	public Review(long id, ReviewUser ru, String text, int rating) {
+		setReviewId(id); 
+		setReviewUser(ru);
 		setReviewText(text);
 		setRating(rating);
 	}
@@ -47,12 +48,12 @@ public class Review implements Serializable {
 		this.reviewId = reviewId;
 	}
 
-	public String getReviewerName() {
-		return reviewerName;
+	public ReviewUser getReviewUser() {
+		return reviewUser;
 	}
 
-	public void setReviewerName(String reviewerName) {
-		this.reviewerName = reviewerName;
+	public void setReviewUser(ReviewUser reviewUser) {
+		this.reviewUser = reviewUser;
 	}
 
 	public String getReviewText() {
@@ -74,6 +75,6 @@ public class Review implements Serializable {
 	// ---------- Utility Methods --------- //
 	@Override
 	public String toString() {
-		return this.reviewText + ". Rating: " + this.rating + "%. Review Author: " + this.reviewerName + ".";
+		return this.reviewText + ". Rating: " + this.rating + "%. Reviewer: " + this.reviewUser.getUserName() + ".";
 	}
 }
