@@ -20,7 +20,7 @@ import net.lukegjpotter.java.reviews.model.ReviewUser;
 public class ReviewEjb implements ReviewEjbLocal {
 
 	@PersistenceContext(unitName = "Reviews-jpa")
-	EntityManager entityManager;
+	private EntityManager entityManager;// = Persistence.createEntityManagerFactory("Reviews-jpa").createEntityManager();
 	
 	// Logging prefix strings.
 	private static final String LOG_MESSAGE_PREFIX = "    [ReviewEJB]";
@@ -73,9 +73,15 @@ public class ReviewEjb implements ReviewEjbLocal {
 		
 		System.out.println(LOG_INFO + "Inside AllReviews().");
 		
-		System.out.println(LOG_INFO + "Creating Query.");
-		Query allReviewsQuery = entityManager.createNamedQuery("getAllReviewsInDatabase");
-		System.out.println(LOG_INFO + "Getting Results List.");
+		Query allReviewsQuery = null;
+		try {
+			System.out.println(LOG_INFO + "Creating Query.");
+			allReviewsQuery = entityManager.createNamedQuery("getAllReviewsInDatabase");
+			System.out.println(LOG_INFO + "Getting Results List.");
+		} catch (NullPointerException e) {
+			System.out.println(LOG_ERROR + "There was an error. creating the Query from the EntityManager.");
+			e.printStackTrace();
+		}
 		
 		@SuppressWarnings("unchecked")
 		List<Review> allReviews = allReviewsQuery.getResultList(); 
@@ -91,9 +97,15 @@ public class ReviewEjb implements ReviewEjbLocal {
 		
 		System.out.println(LOG_INFO + "Inside AllReviews(String).");
 		
-		System.out.println(LOG_INFO + "Creating Query.");
-		Query allReviewsQuery = entityManager.createNamedQuery("getAllReviewsFromReviewer");
-		allReviewsQuery.setParameter("name", reviewerName);
+		Query allReviewsQuery = null;
+		try {
+			System.out.println(LOG_INFO + "Creating Query.");
+			allReviewsQuery = entityManager.createNamedQuery("getAllReviewsFromReviewer");
+			allReviewsQuery.setParameter("name", reviewerName);
+		} catch (NullPointerException e) {
+			System.out.println(LOG_ERROR + "There was an error. creating the Query from the EntityManager.");
+			e.printStackTrace();
+		}
 		
 		System.out.println(LOG_INFO + "Getting Results List.");
 		@SuppressWarnings("unchecked")
@@ -110,10 +122,16 @@ public class ReviewEjb implements ReviewEjbLocal {
 		
 		System.out.println(LOG_INFO + "Inside getAllReviewsForProduct(String, String).");
 		
-		System.out.println(LOG_INFO + "Creating Query.");
-		Query allReviewsQuery = entityManager.createNamedQuery("getAllReviewsForProduct");
-		allReviewsQuery.setParameter("make", make);
-		allReviewsQuery.setParameter("model", model);
+		Query allReviewsQuery = null;
+		try {
+			System.out.println(LOG_INFO + "Creating Query.");
+			allReviewsQuery = entityManager.createNamedQuery("getAllReviewsForProduct");
+			allReviewsQuery.setParameter("make", make);
+			allReviewsQuery.setParameter("model", model);
+		} catch (NullPointerException e) {
+			System.out.println(LOG_ERROR + "There was an error. creating the Query from the EntityManager.");
+			e.printStackTrace();
+		}
 		
 		System.out.println(LOG_INFO + "Getting Results List.");
 		@SuppressWarnings("unchecked")
@@ -126,7 +144,7 @@ public class ReviewEjb implements ReviewEjbLocal {
 	// ---------- Utility Methods ---------- //
 	private void checkForNullEntityManager() {
 		if(entityManager == null) {
-			System.out.println(LOG_ERROR + "Entity Manager is null.");
+			System.out.println(LOG_ERROR + "Entity Manager is null. Brace yourselves, the NullPointerExceptions are coming. NedStark.png");
 		}
 	}
 }
