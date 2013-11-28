@@ -59,4 +59,12 @@ public class ReviewsRestService {
 		
 		return reviewEjb.getAllReviews(reviewerName).toString();
 	}
+	
+	@GET()
+	@Path("/AllReviewsForProduct")
+	@Produces("application/json")
+	public String getAllReviewsForProduct(@QueryParam("make") String make, @QueryParam("model") String model) {
+		
+		return reviewEjb.getAllReviewsForProduct(make, model).toString();
+	}
 }

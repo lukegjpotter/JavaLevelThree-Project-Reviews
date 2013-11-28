@@ -8,8 +8,9 @@ import javax.persistence.*;
  *
  */
 @NamedQueries({
-	@NamedQuery(name = "getAllReviewsInDatabase", query = "SELECT r FROM Review r"),
-	@NamedQuery(name = "getAllReviewsFromReviewer", query = "SELECT r FROM Review r, ReviewUser ru WHERE ru.userName = :name")
+	@NamedQuery(name = "getAllReviewsInDatabase",   query = "SELECT r FROM Review r"),
+	@NamedQuery(name = "getAllReviewsFromReviewer", query = "SELECT r FROM Review r, ReviewUser ru WHERE ru.userName = :name"),
+	@NamedQuery(name = "getAllReviewsForProduct",   query = "SELECT r FROM Review r, Product p WHERE p.make = :make AND p.model = :model")
 })
 @Entity
 @Table(name = "REVIEW", schema = "REVIEWS")
@@ -19,22 +20,27 @@ public class Review implements Serializable {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long reviewId;
+	@ManyToOne(cascade = CascadeType.ALL) @JoinColumn(name = "reviewUserId")
 	private ReviewUser reviewUser;
+	@ManyToOne(cascade = CascadeType.ALL) @JoinColumn(name = "productId")
+	private Product product;
 	private String reviewText;
 	private int rating; // Out of 100.
 	
 	// ---------- Constructors --------- //
 	public Review() {}
 	
-	public Review(ReviewUser ru, String text, int rating) {
+	public Review(ReviewUser ru, Product p, String text, int rating) {
 		setReviewUser(ru);
+		setProduct(p);
 		setReviewText(text);
 		setRating(rating);
 	}
 	
-	public Review(long id, ReviewUser ru, String text, int rating) {
+	public Review(long id, ReviewUser ru, Product p, String text, int rating) {
 		setReviewId(id); 
 		setReviewUser(ru);
+		setProduct(p);
 		setReviewText(text);
 		setRating(rating);
 	}
@@ -56,6 +62,14 @@ public class Review implements Serializable {
 		this.reviewUser = reviewUser;
 	}
 
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
 	public String getReviewText() {
 		return reviewText;
 	}
@@ -75,6 +89,6 @@ public class Review implements Serializable {
 	// ---------- Utility Methods --------- //
 	@Override
 	public String toString() {
-		return this.reviewText + ". Rating: " + this.rating + "%. Reviewer: " + this.reviewUser.getUserName() + ".";
+		return product.toString() + " " + reviewText + ". Rating: " + rating + "%. Reviewer: " + reviewUser.toString() + ".";
 	}
 }

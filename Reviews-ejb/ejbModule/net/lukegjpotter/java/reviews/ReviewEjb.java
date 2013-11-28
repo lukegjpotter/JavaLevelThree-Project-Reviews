@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import net.lukegjpotter.java.reviews.model.Product;
 import net.lukegjpotter.java.reviews.model.Review;
 import net.lukegjpotter.java.reviews.model.ReviewUser;
 
@@ -21,14 +22,19 @@ public class ReviewEjb implements ReviewEjbLocal {
 	@PersistenceContext(unitName = "Reviews-jpa")
 	EntityManager entityManager;
 	
+	// Logging prefix strings.
+	private static final String LOG_MESSAGE_PREFIX = "    [ReviewEJB]";
+	private static final String LOG_INFO  = LOG_MESSAGE_PREFIX + "[info]     ";
+	private static final String LOG_ERROR = LOG_MESSAGE_PREFIX + "[error]    ";
+	
     public ReviewEjb() {
     }
-    
+
+    // ---------- Bean Lifecycle Methods ---------- //
     @PostConstruct
     public void onPostConstruct() {
-    	if(entityManager == null) {
-			System.out.println("    [ReviewEJB]    Entity Manager is null.");
-		}
+    	
+    	checkForNullEntityManager();
     }
 
     @PreDestroy
@@ -37,29 +43,25 @@ public class ReviewEjb implements ReviewEjbLocal {
     	entityManager = null;
     }
 
+    // ---------- Services Methods ---------- //
 	@Override
 	public void addReview(Review review) {
 		
-		if(entityManager == null) {
-			System.out.println("    [ReviewEJB]    Entity Manager is null.");
-		}
+		checkForNullEntityManager();
 		
-		System.out.println("    [ReviewEJB]    Inside AddReview.");
+		System.out.println(LOG_INFO + "Inside AddReview(Review).");
 		
 		if(review == null) {
-			review = new Review(new ReviewUser("lukegjpotter", ""), "This was decent", 50);
+			review = new Review(new ReviewUser("lukegjpotter", ""), new Product("Tefal", "Toaster 2000", 20.00), "This was decent", 50);
 		}
+		System.out.println(LOG_INFO + "Trying to persist: " + review.toString());
 		
-		System.out.println("    [ReviewEJB]    Trying to persist: " + review.toString());
-    	
 		try {
 			// Create a review object.
 			entityManager.persist(review);
-			
-			System.out.println("    [ReviewEJB]    Persisted the following Review: " + review.toString());
+			System.out.println(LOG_INFO + "Persisted the following Review: " + review.toString());
 		} catch(NullPointerException e) {
-			
-			System.out.println("    [ReviewEJB]    Unable to Persist: " + review.toString());
+			System.out.println(LOG_ERROR + "Unable to Persist: " + review.toString());
 			e.printStackTrace();
 		}
 	}
@@ -67,27 +69,64 @@ public class ReviewEjb implements ReviewEjbLocal {
 	@Override
 	public List<Review> getAllReviews() {
 		
-		System.out.println("    [ReviewEJB]    Inside AllReviews.");
-		System.out.println("    [ReviewEJB]    Creating Query.");
+		checkForNullEntityManager();
+		
+		System.out.println(LOG_INFO + "Inside AllReviews().");
+		
+		System.out.println(LOG_INFO + "Creating Query.");
 		Query allReviewsQuery = entityManager.createNamedQuery("getAllReviewsInDatabase");
-		System.out.println("    [ReviewEJB]    Getting Results List.");
+		System.out.println(LOG_INFO + "Getting Results List.");
+		
 		@SuppressWarnings("unchecked")
 		List<Review> allReviews = allReviewsQuery.getResultList(); 
-		System.out.println("    [ReviewEJB]    Returning Results List.");
+		
+		System.out.println(LOG_INFO + "Returning Results List.");
 		return allReviews;
 	}
 
 	@Override
 	public List<Review> getAllReviews(String reviewerName) {
 		
-		System.out.println("    [ReviewEJB]    Inside AllReviews.");
-		System.out.println("    [ReviewEJB]    Creating Query.");
+		checkForNullEntityManager();
+		
+		System.out.println(LOG_INFO + "Inside AllReviews(String).");
+		
+		System.out.println(LOG_INFO + "Creating Query.");
 		Query allReviewsQuery = entityManager.createNamedQuery("getAllReviewsFromReviewer");
 		allReviewsQuery.setParameter("name", reviewerName);
-		System.out.println("    [ReviewEJB]    Getting Results List.");
+		
+		System.out.println(LOG_INFO + "Getting Results List.");
+		@SuppressWarnings("unchecked")
+		List<Review> allReviews = allReviewsQuery.getResultList();
+		
+		System.out.println(LOG_INFO + "Returning Results List.");
+		return allReviews;
+	}
+	
+	@Override
+	public List<Review> getAllReviewsForProduct(String make, String model) {
+		
+		checkForNullEntityManager();
+		
+		System.out.println(LOG_INFO + "Inside getAllReviewsForProduct(String, String).");
+		
+		System.out.println(LOG_INFO + "Creating Query.");
+		Query allReviewsQuery = entityManager.createNamedQuery("getAllReviewsForProduct");
+		allReviewsQuery.setParameter("make", make);
+		allReviewsQuery.setParameter("model", model);
+		
+		System.out.println(LOG_INFO + "Getting Results List.");
 		@SuppressWarnings("unchecked")
 		List<Review> allReviews = allReviewsQuery.getResultList(); 
-		System.out.println("    [ReviewEJB]    Returning Results List.");
+		
+		System.out.println(LOG_INFO + "Returning Results List.");
 		return allReviews;
+	}
+	
+	// ---------- Utility Methods ---------- //
+	private void checkForNullEntityManager() {
+		if(entityManager == null) {
+			System.out.println(LOG_ERROR + "Entity Manager is null.");
+		}
 	}
 }

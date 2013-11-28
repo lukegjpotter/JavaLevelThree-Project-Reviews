@@ -1,6 +1,7 @@
 package net.lukegjpotter.java.reviews.model;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
 
 /**
@@ -58,4 +59,9 @@ public class ReviewUser implements Serializable {
 	}
 	
 	// ---------- Utility Methods --------- //
+	@Override
+	public String toString() {
+		
+		return userName;
+	}
 }
