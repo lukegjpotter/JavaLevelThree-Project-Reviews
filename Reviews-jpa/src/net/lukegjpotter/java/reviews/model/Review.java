@@ -1,28 +1,30 @@
 package net.lukegjpotter.java.reviews.model;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Entity implementation class for Entity: Review
  *
  */
-@NamedQueries({
-	@NamedQuery(name = "getAllReviewsInDatabase",   query = "SELECT r FROM Review r"),
-	@NamedQuery(name = "getAllReviewsFromReviewer", query = "SELECT r FROM Review r, ReviewUser ru WHERE ru.userName = :name"),
-	@NamedQuery(name = "getAllReviewsForProduct",   query = "SELECT r FROM Review r, Product p WHERE p.make = :make AND p.model = :model")
-})
+@NamedQueries({ @NamedQuery(name = "getAllReviewsInDatabase",   query = "SELECT r FROM Review r") })
 @Entity
 @Table(name = "REVIEW", schema = "REVIEWS")
+@XmlRootElement(name = "review")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Review implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long reviewId;
-	@ManyToOne(cascade = CascadeType.ALL) @JoinColumn(name = "reviewUserId")
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER) @JoinColumn(name = "reviewUserId")
 	private ReviewUser reviewUser;
-	@ManyToOne(cascade = CascadeType.ALL) @JoinColumn(name = "productId")
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER) @JoinColumn(name = "productId")
 	private Product product;
 	private String reviewText;
 	private int rating; // Out of 100.

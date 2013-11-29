@@ -1,0 +1,14 @@
+# Add Review - See Reviews-JSON.txt for POST contents.
+http://localhost:8080/Reviews-web/ReviewsApplication/AddReview
+
+http://localhost:8080/Reviews-web/ReviewsApplication
+
+http://localhost:8080/Reviews-web/ReviewsApplication/Test
+
+http://localhost:8080/Reviews-web/ReviewsApplication/AllReviews
+
+http://localhost:8080/Reviews-web/ReviewsApplication/AllReviewsByUser?name=lukegjpotter
+http://localhost:8080/Reviews-web/ReviewsApplication/AllReviewsByUser?name=mark
+
+http://localhost:8080/Reviews-web/ReviewsApplication/AllReviewsForProduct?make=Apple&model=MacBook Pro
+http://localhost:8080/Reviews-web/ReviewsApplication/AllReviewsForProduct?make=Phillips&model=Juicer

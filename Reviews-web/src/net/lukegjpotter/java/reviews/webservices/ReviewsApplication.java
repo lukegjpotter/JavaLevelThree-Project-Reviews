@@ -9,7 +9,7 @@ public class ReviewsApplication extends Application {
 	private Set<Object> singletons = new HashSet<Object>();
 	private Set<Class<?>> empty = new HashSet<Class<?>>();
 	public ReviewsApplication(){
-	     singletons.add(new ReviewsRestService());
+	     empty.add(ReviewsRestService.class);
 	}
 	@Override
 	public Set<Class<?>> getClasses() {

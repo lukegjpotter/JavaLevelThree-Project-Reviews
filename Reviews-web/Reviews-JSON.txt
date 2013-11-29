@@ -1,0 +1,44 @@
+# Review of MBP by Luke
+{
+  "reviewUser" : {
+    "userName"   : "lukegjpotter",
+    "password"   : null
+  },
+  "product"    : {
+    "make"       : "Apple",
+    "model"      : "MacBook Pro",
+    "priceInUsd" : 2000
+  },
+  "reviewText" : "Awesome.",
+  "rating"     : 100
+}
+
+# Review of Juicer by Luke
+{
+  "reviewUser" : {
+    "userName"   : "lukegjpotter",
+    "password"   : null
+  },
+  "product"    : {
+    "make"       : "Phillips",
+    "model"      : "Juicer",
+    "priceInUsd" : 90
+  },
+  "reviewText" : "Awesome, but takes more than one minute to clean.",
+  "rating"     : 90
+}
+
+# Review of Juicer by Mark
+{
+  "reviewUser" : {
+    "userName"   : "mark",
+    "password"   : null
+  },
+  "product"    : {
+    "make"       : "Phillips",
+    "model"      : "Juicer",
+    "priceInUsd" : 90
+  },
+  "reviewText" : "Doesn't make enough juice.",
+  "rating"     : 50
+}
