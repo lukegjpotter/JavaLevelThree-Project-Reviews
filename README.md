@@ -3,6 +3,8 @@ JavaLevelThree-Project-Reviews
 
 The project on the Java Level Three JavaEE course I attended during November 2013.
 
+See the project at its [GitHub Repo](https://github.com/lukegjpotter/JavaLevelThree-Project-Reviews).
+
 There are CSV files in the Reviews-jpa project that can populate the database.
 Populate the Products and ReviewUsers tables first, then the Reviews table last.
 
